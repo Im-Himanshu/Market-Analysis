@@ -17,8 +17,6 @@ class optionUtility :
     nearWeekExpiry = "28-May-2020";
     nearMonthExpirDate = "28-May-2020";
     nextMonthExpiryDate = "25-Jun-2020";
-    con = sqlite3.connect(r'niftyOptionChainAnalysis.db')
-    cur = con.cursor()
     # next weekl
     columnNames = "strikePrice, expiryDate, openInterest, changeinOpenInterest,impliedVolatility," \
                   " lastPrice, change, types,internalValue, externalValue,underlyingPrice,timestamp," \
@@ -35,10 +33,12 @@ class optionUtility :
     tableprefix = "optionChainWithVolume_"
     strike_range = 12;  ## in % to be selected
 
-    def __init__(self, strike_range,symbols, tablePrefix):
+    def __init__(self, strike_range,symbols, tablePrefix,dbLocation):
         self.strike_range = strike_range;
         self.symbols  =symbols
         self.tableprefix = tablePrefix;
+        self.con = sqlite3.connect(dbLocation)
+        self.cur = self.con.cursor()
 
     # query could be like 'SELECT * FROM optionChain_nifty'
     def executeSQLQuery(self,query):
@@ -148,12 +148,7 @@ class optionUtility :
             #print("Market is closed as of now" + time.strftime("%c"))
             time.sleep(2) # giving time for other thread to start
             print("Monitoring time from thread for : "+ threadName)
-            for remaining in range(timeremaining, 0, -1):
-                time.sleep(1)
-                sys.stdout.write("\r")
-                timeLeft = str(DT.timedelta(seconds=remaining))
-                sys.stdout.write(timeLeft + " hours remaining till market opens, time as of now : " + time.strftime("%c"))
-                sys.stdout.flush()
+            self.waitForGivenSecondAndUpdateConsole()
 
     def onetimeSetup(self,symbol):
         self.cur.execute(
@@ -161,6 +156,14 @@ class optionUtility :
 
     def runatStart(self,symbol):
         self.cur.execute('SELECT * FROM '  + self.tableprefix + symbol + ';')
+
+    def waitForGivenSecondAndUpdateConsole(self, timeremaining):
+        for remaining in range(timeremaining, 0, -1):
+            time.sleep(1)
+            sys.stdout.write("\r")
+            timeLeft = str(DT.timedelta(seconds=remaining))
+            sys.stdout.write(timeLeft + " minutes remaining for next sync. time as of now " + time.strftime("%c"))
+            sys.stdout.flush()
 
 
 

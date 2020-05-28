@@ -30,8 +30,9 @@ import dashboardTools as UI_tools
 import optionUtility as Opt_Fun
 #bokeh serve --show bokeh_app
 output_file("option_dashboard.html")
+databaselocation = "niftyOptionChainAnalysis.db"
 
-con = sqlite3.connect('niftyOptionChainAnalysis.db')
+con = sqlite3.connect(databaselocation)
 cur = con.cursor()
 symbol = 'NIFTY'
 symbols=['NIFTY', 'BANKNIFTY']
@@ -50,7 +51,7 @@ syncTimeDelay = 4; ## in minutes time after which data will be fetched from NSE
 latestData = {}; # this will store the latest option chain data as a mapping of symbol
 
 
-optionUtility = Opt_Fun.optionUtility(strike_range,symbols,tableprefix);
+optionUtility = Opt_Fun.optionUtility(strike_range,symbols,tableprefix,databaselocation);
 dashboard_tool = UI_tools.UIutility(optionUtility,symbols,tableprefix);
 
 
