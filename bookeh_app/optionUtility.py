@@ -14,9 +14,10 @@ import datetime as DT
 class optionUtility :
     pd.set_option('display.max_rows', None)
      #  global variable used same across class -- have to be edited only here
-    nearWeekExpiry = "28-May-2020";
-    nearMonthExpirDate = "28-May-2020";
-    nextMonthExpiryDate = "25-Jun-2020";
+    #nearWeekExpiry = "28-May-2020";
+    nearWeekExpiry = "04-Jun-2020";
+    nearMonthExpirDate = "25-Jun-2020";
+    nextMonthExpiryDate = "30-Jul-2020";
     # next weekl
     columnNames = "strikePrice, expiryDate, openInterest, changeinOpenInterest,impliedVolatility," \
                   " lastPrice, change, types,internalValue, externalValue,underlyingPrice,timestamp," \
@@ -148,7 +149,7 @@ class optionUtility :
             #print("Market is closed as of now" + time.strftime("%c"))
             time.sleep(2) # giving time for other thread to start
             print("Monitoring time from thread for : "+ threadName)
-            self.waitForGivenSecondAndUpdateConsole()
+            self.waitForGivenSecondAndUpdateConsole(timeremaining);
 
     def onetimeSetup(self,symbol):
         self.cur.execute(

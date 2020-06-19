@@ -13,7 +13,7 @@ tableprefix = "optionChainWithVolume_"
 symbol = 'NIFTY'
 symbols=['NIFTY', 'BANKNIFTY']
 
-databaselocation = "../niftyOptionChainAnalysis.db"
+databaselocation = "./niftyOptionChainAnalysis.db"
 
 
 
@@ -27,7 +27,7 @@ def continouslySaveDataFromNSEfor(symbol):
     con = sqlite3.connect(databaselocation)
     while True:
         try:
-            #optionUtility.checkIsMarketopenAndSleepIfNot();
+            optionUtility.checkIsMarketopenAndSleepIfNot();
             df = optionUtility.getProcessedOptionChainData(symbol);
             latestData[symbol] = df;
             df.to_sql(table_name, con, if_exists='append', index=False)
@@ -36,18 +36,25 @@ def continouslySaveDataFromNSEfor(symbol):
         except Exception as e :
             print(e)
             print("Data sync failed, some error occured at time : " + time.strftime("%c"))
-        optionUtility.waitForGivenSecondAndUpdateConsole(syncTimeDelay*60)
+        if(symbol == symbols[0]):
+            optionUtility.waitForGivenSecondAndUpdateConsole(syncTimeDelay * 60);
+        else :
+            time.sleep(syncTimeDelay * 60); # sleep the thread if it is not the first thread
+
+
         #time.sleep(syncTimeDelay * 60)
 #run only for one
-continouslySaveDataFromNSEfor('BANKNIFTY')
-#optionUtility.checkIsMarketopenAndSleepIfNot();
-# for symbol in symbols:
-#     ##onetimeSetup(symbol)
-#     t = threading.Thread(target=continouslySaveDataFromNSEfor, args=(symbol,), name = symbol)
-#     t.start()
+#continouslySaveDataFromNSEfor('BANKNIFTY')
+optionUtility.checkIsMarketopenAndSleepIfNot();
+for symbol in symbols:
+    ##onetimeSetup(symbol)
+    t = threading.Thread(target=continouslySaveDataFromNSEfor, args=(symbol,), name = symbol)
+    t.start()
 #df = getProcessedOptionChainData("NIFTY");
 # latestData[symbol] = df
-
+# query = "SELECT * FROM optionChainWithVolume_NIFTY WHERE strikePrice in (9400) AND expiryDate='28-May-2020'"
+# df = optionUtility.executeSQLQuery(query)
+# print(df)
 # #onetimeSetup("BANKNIFTY")
 
 

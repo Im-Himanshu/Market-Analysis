@@ -1,34 +1,18 @@
 from bokeh.io import output_file, show
-from bokeh.models import RangeSlider,Select
-from bokeh.io import show, output_notebook, push_notebook
-from bokeh.plotting import figure
-
-from bokeh.models import CategoricalColorMapper, HoverTool, ColumnDataSource, Panel
+from bokeh.models import RangeSlider,Select, Panel
 from bokeh.models.widgets import CheckboxGroup, Slider, RangeSlider, Tabs, DateRangeSlider, CheckboxButtonGroup,RadioButtonGroup
 
 
 # Bokeh basics
 from bokeh.io import curdoc
 from bokeh.layouts import column, row, WidgetBox
-#from bokeh.palettes import Category20_16
 import sqlite3
-import pandas as pd
-import json
 import numpy as np
-import requests
-import time
-import datetime as DT
-import sys
-import threading
-import os
-
-from bokeh.application.handlers import FunctionHandler
-from bokeh.application import Application
 
 #https://towardsdatascience.com/data-visualization-with-bokeh-in-python-part-iii-a-complete-dashboard-dc6a86aa6e23
 import dashboardTools as UI_tools
 import optionUtility as Opt_Fun
-#bokeh serve --show bokeh_app
+#bokeh serve --show bookeh_app
 output_file("option_dashboard.html")
 databaselocation = "niftyOptionChainAnalysis.db"
 
@@ -57,16 +41,17 @@ dashboard_tool = UI_tools.UIutility(optionUtility,symbols,tableprefix);
 
 nearWeekExpiry = optionUtility.nearWeekExpiry;
 nearMonthExpirDate=optionUtility.nearMonthExpirDate;
-nextMonthExpiryDate = optionUtility.nearMonthExpirDate;
+nextMonthExpiryDate = optionUtility.nextMonthExpiryDate;
 
 expiryDates = [nearWeekExpiry,nearMonthExpirDate,nextMonthExpiryDate, "All Above"]
 
 #new_src = dashboard_tool.make_dataset(int(9300), nearWeekExpiry, 'NIFTY', True)
 
-def modify_doc():
+def modify_doc(symbol):
 
-    df = optionUtility.getProcessedOptionChainData("NIFTY");
+    df = optionUtility.getProcessedOptionChainData(symbol);
     latestData[symbol] = df;
+    allSources = {};
     def update(attr, old, new):
         selected_expiryDate = expiry_date_selector.value;
         #selectedStrikePrice = allUniqueStrikePrice[strikePrice_selector.active];
@@ -76,12 +61,21 @@ def modify_doc():
         selectedStrikeNumber  = activeStrikePriceIndexes.__sizeof__();
         processed = []
         #print(activeStrikePriceIndexes)
-        for source in allSources:
+        for source in allWorkingSources:
             if(index > (selectedStrikeNumber-1)):
                 break; # in case less number of strike is selected don't through error
             strikeIndex = activeStrikePriceIndexes[index];
             selectedStrikePrice = allUniqueStrikePrice[strikeIndex];
-            new_src = dashboard_tool.make_dataset(int(selectedStrikePrice), selected_expiryDate, symbol, isForTodayOnly)
+            new_src =0;
+            new_src = dashboard_tool.make_dataset(int(selectedStrikePrice), selected_expiryDate, symbol,
+                                                  isForTodayOnly)
+            #
+            # if((not (selectedStrikePrice in allSources.keys()))) :
+            #     new_src = dashboard_tool.make_dataset(int(selectedStrikePrice), selected_expiryDate, symbol,
+            #                                           isForTodayOnly)
+            #     allSources[selectedStrikePrice]  = new_src; #save it once processed data base call is saved.. which also requires computing
+            # else :
+            #     new_src = allSources[selectedStrikePrice]
             source.data.update(new_src.data)
             index = index +1;
             processed.append(selectedStrikePrice);
@@ -103,18 +97,28 @@ def modify_doc():
     #selectedStrikePrice = allUniqueStrikePrice[strikePrice_selector.active];
 
     activeStrikePriceIndexes = strikePrice_selector.active;
-    allSources = []
     allplots = []
+    allWorkingSources = []
     for oneindex in activeStrikePriceIndexes:
         selectedStrikePrice = allUniqueStrikePrice[oneindex];
         src = dashboard_tool.make_dataset(int(selectedStrikePrice), selected_expiryDate, symbol, isForTodayOnly)
-        allSources.append(src);
+        allSources[selectedStrikePrice] = src;
+        allWorkingSources.append(src);
         p = dashboard_tool.make_plot(src, selectedStrikePrice)
         allplots.append(p);
     allplotslayout = column(allplots);
     layout = column(row(expiry_date_selector, strikePrice_selector), allplotslayout)
-    return layout;
+    tab = Panel(child=layout, title= symbol)
+    return tab;
 
-tab = modify_doc();
-curdoc().add_root(tab);
+tabs = []
+for symbol in symbols :
+    tab = modify_doc(symbol);
+    tabs.append(tab);
+tabs = Tabs(tabs=tabs);
+curdoc().add_root(tabs);
+
+
+## Note : it throws error when
+# 1. there is no data for the given query in the database
 

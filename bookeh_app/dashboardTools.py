@@ -51,7 +51,7 @@ class UIutility :
         df = df.drop(columns=['impliedVolatility', 'expiryDate', 'changeinOpenInterest', 'change',
                               'totalTradedVolume', 'totalBuyQuantity', 'totalSellQuantity'])
         df['timestamp'] = df['timestamp'].apply(pd.to_datetime);
-        df['timestamp2']  = df.timestamp.dt.strftime('%H:%M').astype(str)#converting it to string for inear scale..
+        df['timestamp2']  =df.timestamp.dt.strftime('%H:%M').astype(str)#converting it to string for inear scale..
         ## have to work on this logic
         if (expiry_date == "All Above"):
             df = df.groupby(['timestamp', 'strikePrice', 'types'], as_index=False)['openInterest'].sum();
