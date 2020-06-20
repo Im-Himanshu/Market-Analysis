@@ -38,7 +38,7 @@ def modify_doc(doc):
 
 @app.route('/', methods=['GET'])
 def bkapp_page():
-    script = server_document('http://localhost:5006/bkapp')
+    script = server_document('http://localhost:5006/bkapp') ## here keeping 5006 is important for the application
     return render_template("embed.html", script=script, template="Flask")
 
 

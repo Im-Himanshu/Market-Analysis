@@ -16,7 +16,7 @@ import threading;
 
 class bookehApp :
     # bokeh serve --show bookeh_app
-    output_file("option_dashboard.html")
+    #output_file("option_dashboard.html")
     databaselocation = "../niftyOptionChainAnalysis.db"
 
     con = sqlite3.connect(databaselocation)
