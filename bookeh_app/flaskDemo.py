@@ -10,7 +10,7 @@ from tornado.ioloop import IOLoop
 import sqlite3;
 import threading
 from bokeh.sampledata.sea_surface_temperature import sea_surface_temperature
-from bookeh_app.bookehApp import bookehApp;
+from bookehApp import bookehApp;
 app = Flask(__name__)
 ba = None;
 #https://github.com/bokeh/bokeh/blob/1.1.0/examples/howto/server_embed/standalone_embed.py
