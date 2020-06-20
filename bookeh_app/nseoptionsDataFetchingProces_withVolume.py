@@ -53,7 +53,7 @@ for symbol in symbols:
 #df = getProcessedOptionChainData("NIFTY");
 # latestData[symbol] = df
 # query = "SELECT * FROM optionChainWithVolume_NIFTY WHERE strikePrice in (9400) AND expiryDate='28-May-2020'"
-# df = optionUtility.executeSQLQuery(query)
+# df = optionUtility.executneSQLQuery(query)
 # print(df)
 # #onetimeSetup("BANKNIFTY")
 

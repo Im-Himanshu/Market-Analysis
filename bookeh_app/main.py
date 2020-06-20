@@ -26,7 +26,7 @@ default_table = tableprefix+symbol
 #runatStart(symbol)
 strike_range = 5; ## in % to be selected
 firstPID = 0;
-isForTodayOnly = True;
+isForTodayOnly = False;
 
 
 #next weekl
@@ -35,7 +35,7 @@ syncTimeDelay = 4; ## in minutes time after which data will be fetched from NSE
 latestData = {}; # this will store the latest option chain data as a mapping of symbol
 
 
-optionUtility = Opt_Fun.optionUtility(strike_range,symbols,tableprefix,databaselocation);
+optionUtility = Opt_Fun.optionUtility(strike_range,symbols,tableprefix,databaselocation,con,cur);
 dashboard_tool = UI_tools.UIutility(optionUtility,symbols,tableprefix);
 
 

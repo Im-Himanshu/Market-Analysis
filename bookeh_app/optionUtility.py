@@ -34,12 +34,14 @@ class optionUtility :
     tableprefix = "optionChainWithVolume_"
     strike_range = 12;  ## in % to be selected
 
-    def __init__(self, strike_range,symbols, tablePrefix,dbLocation):
+    def __init__(self, strike_range,symbols, tablePrefix,dbLocation,con,cur):
         self.strike_range = strike_range;
-        self.symbols  =symbols
+        self.symbols  = symbols
         self.tableprefix = tablePrefix;
-        self.con = sqlite3.connect(dbLocation)
-        self.cur = self.con.cursor()
+        self.con = con;
+        self.cur = cur;
+#       self.con = sqlite3.connect(dbLocation)
+#       self.cur = self.con.cursor()
 
     # query could be like 'SELECT * FROM optionChain_nifty'
     def executeSQLQuery(self,query):
