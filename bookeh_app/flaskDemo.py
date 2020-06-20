@@ -12,10 +12,7 @@ import threading
 from bokeh.sampledata.sea_surface_temperature import sea_surface_temperature
 from bookeh_app.bookehApp import bookehApp;
 app = Flask(__name__)
-con = None;
-cur = None;
 ba = None;
-databaselocation = "niftyOptionChainAnalysis.db"
 #https://github.com/bokeh/bokeh/blob/1.1.0/examples/howto/server_embed/standalone_embed.py
 #https://medium.com/@n.j.marey/my-experience-with-flask-and-bokeh-plus-a-small-tutorial-7b49b2e38c76
 def modify_doc(doc):
@@ -33,11 +30,9 @@ def bkapp_page():
 def bk_worker():
     # Can't pass num_procs > 1 in this configuration. If you need to run multiple
     # processes, see e.g. flask_gunicorn_embed.py
-    global con, cur, ba # initiate con cur in the bookeh server thread;
-    con = sqlite3.connect(databaselocation)
-    cur = con.cursor()
-    print("modify doc in :", threading.current_thread())
-    ba = bookehApp(con,cur); #inititating the sql connection in the server thread
+    global  ba;
+    print("in bk_ worker : 35 : ", threading.current_thread());
+    ba = bookehApp(); #inititating the sql connection in the server thread
     server = Server({'/bkapp': modify_doc}, io_loop=IOLoop(), allow_websocket_origin=["*"])
     server.start()
     server.io_loop.start()
@@ -51,4 +46,4 @@ if __name__ == '__main__':
     print()
     print('Multiple connections may block the Bokeh app in this configuration!')
     print('See "flask_gunicorn_embed.py" for one way to run multi-process')
-    app.run(port=8000)
+    app.run(host='0.0.0.0',port=8000)

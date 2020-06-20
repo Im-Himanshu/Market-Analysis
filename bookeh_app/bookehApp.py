@@ -10,17 +10,17 @@ import sqlite3
 import numpy as np
 
 #https://towardsdatascience.com/data-visualization-with-bokeh-in-python-part-iii-a-complete-dashboard-dc6a86aa6e23
-import dashboardTools as dashboardTools
-import optionUtility as optionUtility
+import dashboardTools as UI_tools
+import optionUtility as Opt_Fun
 import threading;
 
 class bookehApp :
     # bokeh serve --show bookeh_app
     output_file("option_dashboard.html")
-    databaselocation = "niftyOptionChainAnalysis.db"
+    databaselocation = "../niftyOptionChainAnalysis.db"
 
-    con = None;#= sqlite3.connect(databaselocation)
-    cur = None;
+    con = sqlite3.connect(databaselocation)
+    cur = con.cursor()
     symbol = 'NIFTY'
     symbols = ['NIFTY', 'BANKNIFTY']
 
@@ -35,11 +35,6 @@ class bookehApp :
     syncTimeDelay = 4;  ## in minutes time after which data will be fetched from NSE
 
     latestData = {};  # this will store the latest option chain data as a mapping of symbol
-
-
-    #optionUtility = optionUtility.optionUtility(strike_range, symbols, tableprefix, databaselocation);
-    #dashboard_tool = dashboardTools.UIutility(optionUtility, symbols, tableprefix);
-
 
     # new_src = dashboard_tool.make_dataset(int(9300), nearWeekExpiry, 'NIFTY', True)
 
@@ -111,19 +106,19 @@ class bookehApp :
         return tab;
 
     def generateTabs(self):
-        print("genrate tabs server in :", threading.current_thread())
         tabs = []
         for symbol in self.symbols:
             tab = self.modify_doc_dummy(symbol);
             tabs.append(tab);
         tabs = Tabs(tabs=tabs);
         return tabs;
-    def __init__(self, con, cur):
-        print("class started");
-        self.con = con
-        self.cur = cur;
-        self.optionUtility = optionUtility.optionUtility(self.strike_range, self.symbols, self.tableprefix, self.databaselocation, con, cur);
-        self.dashboard_tool = dashboardTools.UIutility(optionUtility, self.symbols, self.tableprefix);
+    def __init__(self):
+        print("class started")
+        print("in bookeh app 126 : ", threading.current_thread());
+
+        self.optionUtility = Opt_Fun.optionUtility(self.strike_range, self.symbols, self.tableprefix, self.databaselocation);
+        self.dashboard_tool = UI_tools.UIutility(self.optionUtility, self.symbols, self.tableprefix);
+
         self.nearWeekExpiry = self.optionUtility.nearWeekExpiry;
         self.nearMonthExpirDate = self.optionUtility.nearMonthExpirDate;
         self.nextMonthExpiryDate = self.optionUtility.nextMonthExpiryDate;
