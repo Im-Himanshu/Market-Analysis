@@ -39,6 +39,7 @@ class bookehApp :
     # new_src = dashboard_tool.make_dataset(int(9300), nearWeekExpiry, 'NIFTY', True)
 
     def modify_doc_dummy(self,symbol):
+        print("cmoing in modify_doc_dummy")
 
         df = self.optionUtility.getProcessedOptionChainData(symbol);
         self.latestData[symbol] = df;

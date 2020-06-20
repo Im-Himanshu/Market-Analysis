@@ -16,6 +16,7 @@ ba = None;
 #https://github.com/bokeh/bokeh/blob/1.1.0/examples/howto/server_embed/standalone_embed.py
 #https://medium.com/@n.j.marey/my-experience-with-flask-and-bokeh-plus-a-small-tutorial-7b49b2e38c76
 def modify_doc(doc):
+    print("coming in modify doc");
     tabs = ba.generateTabs();
     doc.add_root(tabs)
     doc.theme = Theme(filename="theme.yaml")
