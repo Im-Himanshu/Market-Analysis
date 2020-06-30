@@ -7,11 +7,11 @@ import sys
 import datetime as DT
 pd.set_option('display.max_rows', None)
 
-syncTimeDelay = 10; ## in minutes time after which data will be fetched from NSE
+syncTimeDelay = 6; ## in minutes time after which data will be fetched from NSE
 strike_range = 12; ## in % to be selected
 tableprefix = "optionChainWithVolume_"
 symbol = 'NIFTY'
-symbols=['NIFTY', 'BANKNIFTY']
+symbols=['NIFTY','BANKNIFTY']
 
 databaselocation = "./niftyOptionChainAnalysis.db"
 
@@ -27,7 +27,7 @@ def continouslySaveDataFromNSEfor(symbol):
     con = sqlite3.connect(databaselocation)
     while True:
         try:
-            optionUtility.checkIsMarketopenAndSleepIfNot();
+            #optionUtility.checkIsMarketopenAndSleepIfNot();
             df = optionUtility.getProcessedOptionChainData(symbol);
             latestData[symbol] = df;
             df.to_sql(table_name, con, if_exists='append', index=False)

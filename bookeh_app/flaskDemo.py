@@ -24,7 +24,7 @@ def modify_doc(doc):
 
 @app.route('/', methods=['GET'])
 def bkapp_page():
-    script = server_document('http://localhost:5006/bkapp')
+    script = server_document('http://localhost:5008/bkapp')
     return render_template("embed.html", script=script, template="Flask")
 
 
@@ -34,7 +34,7 @@ def bk_worker():
     global  ba;
     print("in bk_ worker : 35 : ", threading.current_thread());
     ba = bookehApp(); #inititating the sql connection in the server thread
-    server = Server({'/bkapp': modify_doc}, io_loop=IOLoop(), allow_websocket_origin=["*"])
+    server = Server({'/bkapp': modify_doc}, io_loop=IOLoop(), allow_websocket_origin=["localhost"])
     server.start()
     server.io_loop.start()
 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     print()
     print('Multiple connections may block the Bokeh app in this configuration!')
     print('See "flask_gunicorn_embed.py" for one way to run multi-process')
-    app.run(host='0.0.0.0',port=8000)
+    app.run(host='0.0.0.0',port=8001)
 
     ## hosted at this url
     ##http://ec2-34-216-174-89.us-west-2.compute.amazonaws.com:8000/

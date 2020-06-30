@@ -15,9 +15,9 @@ class optionUtility :
     pd.set_option('display.max_rows', None)
      #  global variable used same across class -- have to be edited only here
     #nearWeekExpiry = "28-May-2020";
-    nearWeekExpiry = "04-Jun-2020";
-    nearMonthExpirDate = "25-Jun-2020";
-    nextMonthExpiryDate = "30-Jul-2020";
+    nearWeekExpiry = "02-Jul-2020";
+    nearMonthExpirDate = "30-Jul-2020";
+    nextMonthExpiryDate = "27-Aug-2020";
     # next weekl
     columnNames = "strikePrice, expiryDate, openInterest, changeinOpenInterest,impliedVolatility," \
                   " lastPrice, change, types,internalValue, externalValue,underlyingPrice,timestamp," \
