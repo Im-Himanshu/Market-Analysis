@@ -18,6 +18,7 @@ class optionUtility :
     nearWeekExpiry = "02-Jul-2020";
     nearMonthExpirDate = "30-Jul-2020";
     nextMonthExpiryDate = "27-Aug-2020";
+    expiryToTrack = [nearWeekExpiry,nearMonthExpirDate,nextMonthExpiryDate]
     # next weekl
     columnNames = "strikePrice, expiryDate, openInterest, changeinOpenInterest,impliedVolatility," \
                   " lastPrice, change, types,internalValue, externalValue,underlyingPrice,timestamp," \

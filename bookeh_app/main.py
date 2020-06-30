@@ -35,7 +35,7 @@ syncTimeDelay = 4; ## in minutes time after which data will be fetched from NSE
 latestData = {}; # this will store the latest option chain data as a mapping of symbol
 
 
-optionUtility = Opt_Fun.optionUtility(strike_range,symbols,tableprefix,databaselocation,con,cur);
+optionUtility = Opt_Fun.optionUtility(strike_range,symbols,tableprefix,databaselocation);
 dashboard_tool = UI_tools.UIutility(optionUtility,symbols,tableprefix);
 
 

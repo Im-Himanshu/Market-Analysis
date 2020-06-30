@@ -1,0 +1,17 @@
+To run this app there are two method
+
+1.
+first go the parent folder of the bookeh_app and run this command...
+    bokeh serve --show bookeh_app --port 5006
+this will open a server by running the main.py inside this folder and host the app
+this will use the database out of the given folder and hence the path in main.py has different folder than flaskDemo.py as it
+follows a different format
+
+just make sure you have an entry saved for the current day before running the server otherwise it will throw an error
+
+2.
+second method is prefered one and through the flask server but sometime it behaved randomly as there are two server redirecting
+each other and bookeh is hosted inside the flask server
+
+for this method just run the flaskDemo class and it should work
+take note that database location here is ./ so that it referrs to same database which has the data..

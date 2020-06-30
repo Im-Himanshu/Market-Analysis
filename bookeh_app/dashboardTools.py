@@ -99,7 +99,7 @@ class UIutility :
         ],
             mode='vline')
 
-        p = figure(plot_width=400, plot_height=400,
+        p = figure(plot_width=200, plot_height=200,
                    title='OI call : ', x_axis_type='datetime',
                    x_axis_label='Time', y_axis_label='OI(in # of contract)')
 

@@ -13,6 +13,9 @@ from bokeh.sampledata.sea_surface_temperature import sea_surface_temperature
 from bookehApp import bookehApp;
 app = Flask(__name__)
 ba = None;
+
+
+## this file is of no use, just was a demo to see what was working
 #https://github.com/bokeh/bokeh/blob/1.1.0/examples/howto/server_embed/standalone_embed.py
 #https://medium.com/@n.j.marey/my-experience-with-flask-and-bokeh-plus-a-small-tutorial-7b49b2e38c76
 def modify_doc(doc):
@@ -24,7 +27,7 @@ def modify_doc(doc):
 
 @app.route('/', methods=['GET'])
 def bkapp_page():
-    script = server_document('http://localhost:5008/bkapp')
+    script = server_document('http://localhost:5006/bkapp') # keeping 5006 is very necessary for keepting it work
     return render_template("embed.html", script=script, template="Flask")
 
 
@@ -34,7 +37,7 @@ def bk_worker():
     global  ba;
     print("in bk_ worker : 35 : ", threading.current_thread());
     ba = bookehApp(); #inititating the sql connection in the server thread
-    server = Server({'/bkapp': modify_doc}, io_loop=IOLoop(), allow_websocket_origin=["localhost"])
+    server = Server({'/bkapp': modify_doc}, io_loop=IOLoop(), allow_websocket_origin=["*"])
     server.start()
     server.io_loop.start()
 
@@ -43,7 +46,7 @@ Thread(target=bk_worker).start()
 
 print("main server in :", threading.current_thread())
 if __name__ == '__main__':
-    print('Opening single process Flask app with embedded Bokeh application on http://localhost:8000/')
+    print('Opening single process Flask app with embedded Bokeh application on http://localhost:8001/')
     print()
     print('Multiple connections may block the Bokeh app in this configuration!')
     print('See "flask_gunicorn_embed.py" for one way to run multi-process')

@@ -45,7 +45,7 @@ def continouslySaveDataFromNSEfor(symbol):
         #time.sleep(syncTimeDelay * 60)
 #run only for one
 #continouslySaveDataFromNSEfor('BANKNIFTY')
-optionUtility.checkIsMarketopenAndSleepIfNot();
+#optionUtility.checkIsMarketopenAndSleepIfNot();
 for symbol in symbols:
     ##onetimeSetup(symbol)
     t = threading.Thread(target=continouslySaveDataFromNSEfor, args=(symbol,), name = symbol)
