@@ -39,17 +39,23 @@ optionUtility = Opt_Fun.optionUtility(strike_range,symbols,tableprefix,databasel
 dashboard_tool = UI_tools.UIutility(optionUtility,symbols,tableprefix);
 
 
-nearWeekExpiry = optionUtility.nearWeekExpiry;
-nearMonthExpirDate=optionUtility.nearMonthExpirDate;
-nextMonthExpiryDate = optionUtility.nextMonthExpiryDate;
+# nearWeekExpiry = optionUtility.nearWeekExpiry;
+# nearMonthExpirDate=optionUtility.nearMonthExpirDate;
+# nextMonthExpiryDate = optionUtility.nextMonthExpiryDate;
 
-expiryDates = [nearWeekExpiry,nearMonthExpirDate,nextMonthExpiryDate, "All Above"]
+# now no need to manually feed the date just start the code it will automatically pick up the date in both
+expiryDates = None;
+nearestExpiryDate = None;
+
 
 #new_src = dashboard_tool.make_dataset(int(9300), nearWeekExpiry, 'NIFTY', True)
 
 def modify_doc(symbol):
 
+    global nearestExpiryDate;
     df = optionUtility.getProcessedOptionChainData(symbol);
+    nearestExpiryDate = optionUtility.nearestExpiryDate;
+    expiryDates = [nearestExpiryDate, "All Above"]
     latestData[symbol] = df;
     allSources = {};
     def update(attr, old, new):
@@ -69,13 +75,6 @@ def modify_doc(symbol):
             new_src =0;
             new_src = dashboard_tool.make_dataset(int(selectedStrikePrice), selected_expiryDate, symbol,
                                                   isForTodayOnly)
-            #
-            # if((not (selectedStrikePrice in allSources.keys()))) :
-            #     new_src = dashboard_tool.make_dataset(int(selectedStrikePrice), selected_expiryDate, symbol,
-            #                                           isForTodayOnly)
-            #     allSources[selectedStrikePrice]  = new_src; #save it once processed data base call is saved.. which also requires computing
-            # else :
-            #     new_src = allSources[selectedStrikePrice]
             source.data.update(new_src.data)
             index = index +1;
             processed.append(selectedStrikePrice);
@@ -84,7 +83,7 @@ def modify_doc(symbol):
 
     allUniqueStrikePrice = latestData[symbol]['strikePrice'].apply(str).unique().tolist();
     ATMStrikeindex = int(np.floor(len(allUniqueStrikePrice) / 2))
-    expiry_date_selector = Select(value=nearWeekExpiry, options=expiryDates)
+    expiry_date_selector = Select(value=nearestExpiryDate, options=expiryDates)
     strikePrice_selector = CheckboxButtonGroup(labels=allUniqueStrikePrice, active=[ATMStrikeindex-2,ATMStrikeindex-1, ATMStrikeindex,ATMStrikeindex+1,ATMStrikeindex+2]) # in case multiple to be shown at once#
     # strikePrice_selector = RadioButtonGroup(
     #     labels=allUniqueStrikePrice, active=ATMStrikeindex);

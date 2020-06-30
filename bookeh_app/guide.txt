@@ -9,9 +9,64 @@ follows a different format
 
 just make sure you have an entry saved for the current day before running the server otherwise it will throw an error
 
-2.
+2. Run the flaskDemo File : it runs with the combination of
+flaskDemo, bookehApp and rest is common with method one.
 second method is prefered one and through the flask server but sometime it behaved randomly as there are two server redirecting
 each other and bookeh is hosted inside the flask server
 
 for this method just run the flaskDemo class and it should work
 take note that database location here is ./ so that it referrs to same database which has the data..
+
+this method as of now is not working with the new auto date pick up
+
+Update : 1
+
+Now no need to manually feed in the respective date it will update them dynamically by itself just start the data fetcher and the
+dashboard code it will work.
+
+
+
+
+Trying setting it on AWS
+
+AWS set up
+
+
+Chmod 400 Himanshu-AWSt2-micro.pem
+ssh -i "Himanshu-AWSt2-micro.pem" ec2-user@ec2-34-219-168-136.us-west-2.compute.amazonaws.com
+// this gets changed for every restart
+sudo yum install python37
+
+Sudo yum install git -y
+
+git config --global user.name “ImHimanShoe"
+git config --global user.email “goyalhimanshu414@gmail.com"
+
+Git clone https://github.com/ImHimanShoe/Market-Analysis.git
+
+pip freeze > requeriments.txt
+
+pip install -r requeriments.txt
+
+
+Python3 -m pip install -r  requirements.txt
+
+
+   wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-ppc64le.sh
+export PATH=~/anaconda3/bin:$PATH.
+
+  nohup bokeh serve —show booker_app --allow-websocket-origin= ‘*’
+To kill a running port, run this command
+Fuser -k 8000/tcp
+http://172.31.31.57:8000/
+Changing the Configure Security Groups of the EC2 which control what can access inside of the public IP
+https://www.codementor.io/@dushyantbgs/deploying-a-flask-application-to-aws-gnva38cf0 : step-6 is crucial in this
+To allow all the port keep this setting
+Custom TCP	TCP	1000 - 9000	::/0	all port from IP
+And voilla!! It worked able to access the apis, fuhhh!!
+
+
+
+Database in rdbms :
+Goyal-MarketAnalysis
+admin, admininaws

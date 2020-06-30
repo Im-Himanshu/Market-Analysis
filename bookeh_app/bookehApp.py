@@ -77,7 +77,7 @@ class bookehApp :
 
         allUniqueStrikePrice = self.latestData[symbol]['strikePrice'].apply(str).unique().tolist();
         ATMStrikeindex = int(np.floor(len(allUniqueStrikePrice) / 2))
-        expiry_date_selector = Select(value=self.nearWeekExpiry, options=self.expiryDates)
+        expiry_date_selector = Select(value=self.nearestExpiryDate, options=self.expiryDates)
         strikePrice_selector = CheckboxButtonGroup(labels=allUniqueStrikePrice,
                                                    active=[ATMStrikeindex - 2, ATMStrikeindex - 1, ATMStrikeindex,
                                                            ATMStrikeindex + 1,
@@ -120,10 +120,11 @@ class bookehApp :
         self.optionUtility = Opt_Fun.optionUtility(self.strike_range, self.symbols, self.tableprefix, self.databaselocation);
         self.dashboard_tool = UI_tools.UIutility(self.optionUtility, self.symbols, self.tableprefix);
 
-        self.nearWeekExpiry = self.optionUtility.nearWeekExpiry;
-        self.nearMonthExpirDate = self.optionUtility.nearMonthExpirDate;
-        self.nextMonthExpiryDate = self.optionUtility.nextMonthExpiryDate;
-        self.expiryDates = [self.nearWeekExpiry, self.nearMonthExpirDate, self.nextMonthExpiryDate, "All Above"]
+        # self.nearWeekExpiry = self.optionUtility.nearWeekExpiry;
+        # self.nearMonthExpirDate = self.optionUtility.nearMonthExpirDate;
+        # self.nextMonthExpiryDate = self.optionUtility.nextMonthExpiryDate;
+        self.nearestExpiryDate = self.optionUtility.nearestExpiryDate;
+        self.expiryDates = [self.optionUtility.nearestExpiryDate ,"All Above"]
 
     # curdoc().add_root(tabs);
 

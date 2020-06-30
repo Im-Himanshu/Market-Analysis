@@ -15,10 +15,11 @@ class optionUtility :
     pd.set_option('display.max_rows', None)
      #  global variable used same across class -- have to be edited only here
     #nearWeekExpiry = "28-May-2020";
-    nearWeekExpiry = "02-Jul-2020";
-    nearMonthExpirDate = "30-Jul-2020";
-    nextMonthExpiryDate = "27-Aug-2020";
-    expiryToTrack = [nearWeekExpiry,nearMonthExpirDate,nextMonthExpiryDate]
+    # nearWeekExpiry = "02-Jul-2020";
+    # nearMonthExpirDate = "30-Jul-2020";
+    # nextMonthExpiryDate = "27-Aug-2020";
+    expiryToTrack = None;
+    nearestExpiryDate  = None;
     # next weekl
     columnNames = "strikePrice, expiryDate, openInterest, changeinOpenInterest,impliedVolatility," \
                   " lastPrice, change, types,internalValue, externalValue,underlyingPrice,timestamp," \
@@ -75,7 +76,8 @@ class optionUtility :
         data = json.loads(self.getOptionChainDataFromNSEfor(symbol))
         allRecord = data['records']['data'];
         allDates = data['records']['expiryDates'];
-        nearestExpiryDate = allDates[0];
+        self.nearestExpiryDate = allDates[0];
+        self.expiryToTrack = [self.nearestExpiryDate]
         flattenedRecord = []
         underlyingPrice = data['records']['underlyingValue'];
         timeSync = data['records']['timestamp']; ## time when the data was synced with the server
@@ -116,8 +118,9 @@ class optionUtility :
                                                 'pChange','bidQty','bidprice','askQty','askPrice']);
         FilteredOptionData = option_data[option_data['strikePrice']> lower_Range]
         FilteredOptionData = FilteredOptionData[option_data['strikePrice']<upper_Range]
-        FilteredOptionData = FilteredOptionData[(option_data['expiryDate'] == self.nearWeekExpiry) | (option_data['expiryDate'] == self.nearMonthExpirDate)
-                                 | (option_data['expiryDate'] == self.nextMonthExpiryDate)]
+        # FilteredOptionData = FilteredOptionData[(option_data['expiryDate'] == self.nearWeekExpiry) | (option_data['expiryDate'] == self.nearMonthExpirDate)
+        #                          | (option_data['expiryDate'] == self.nextMonthExpiryDate)]
+        FilteredOptionData = FilteredOptionData[(option_data['expiryDate'] == self.nearestExpiryDate)] # saving only neareast week expiry data
         FilteredOptionData['underlyingPrice'] = underlyingPrice
         FilteredOptionData['timestamp'] = DT.datetime.now().strftime("%m/%d/%Y %H:%M:%S"); #timeSync
         FilteredOptionData = FilteredOptionData[self.columnNames_list] # reorder in a given order of columns
@@ -129,7 +132,7 @@ class optionUtility :
         today = DT.date.today()
         tomorrow = today + DT.timedelta(days=1)
         todaycloseTime = DT.datetime.combine(today, DT.time(hour=15, minute=31))
-        todayOpenTime = DT.datetime.combine(today, DT.time(hour=9, minute=16))
+        todayOpenTime = DT.datetime.combine(today, DT.time(hour=9, minute=13))
         nextOpeningTime = DT.datetime.combine(tomorrow, DT.time(hour=9, minute=16))
         if(now <todayOpenTime):
             nextOpeningTime = todayOpenTime;
